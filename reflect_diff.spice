@@ -17,13 +17,13 @@ Different amplification stage for Reflect
 *               0                0
 
 Vcc 8 0 dc 3.3V
-Vsig 1 4 dc 0V sin(0V 40mV 100mHz 1s 0)
+*Vsig 1 4 dc 0V sin(0V 40mV 100mHz 1s 0)
 
-R_in_a 1 2 1k
-R_in_b 4 5 1k
+*R_in_a 1 2 1k
+*R_in_b 4 5 1k
 
 R_f    2 3 33k
-R_c    5 6 20k
+*R_c    5 6 20k
 R_e    6 0 10k
 R_d    6 7 20k
 
