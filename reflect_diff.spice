@@ -1,0 +1,43 @@
+Different amplification stage for Reflect
+
+*               *----- R_f ------*
+*               |                |
+* 1 -- R_in_a --2--| -      |    |
+*                  |   xamp |----3--- out
+* 4 -- R_in_b --5--| +      |    
+*               |                ^
+*               |                8
+*               |                |
+*              R_c              R_1
+*               |                |
+*               6----- R_d ------7
+*               |                |
+*              R_e              R_2
+*               |                |
+*               0                0
+
+Vcc 8 0 dc 3.3V
+Vsig 1 4 dc 0V sin(0V 40mV 100mHz 1s 0)
+
+R_in_a 1 2 1k
+R_in_b 4 5 1k
+
+R_f    2 3 33k
+R_c    5 6 20k
+R_e    6 0 10k
+R_d    6 7 20k
+
+R_1    7 8 1u
+R_2    7 0 10k
+
+R_load 3 0 1Meg
+
+xamp 5 2 8 0 3 lmv358
+
+.include lmv358.mod
+
+.tran 100ms 21s
+.end
+
+run
+plot v(1,4) v(3) v(8)
