@@ -34,15 +34,19 @@ function retval = div(a, b)
   retval = a/(a+b);
 endfunction
 
+function retval = solveRC(R, C)
+  retval = 1/(2*pi*R^2*C)
+endfunction
+
 Vcc = 3.3;
-R_1 = 1e-6;
+R_1 = 10e3; % 1e-6;
 R_2 = 10e3;
 R_d = 20e3;
 R_e = 10e3;
 
 R_vth_out_num = par(R_d+R_e, R_2);
 R_vth_out = div(R_vth_out_num, R_1);
-V_th = R_vth_out*Vcc*div(R_e, R_d);
-i_th = div(par(R_e, R_d), R_1)*Vcc/R_d;
-R_th = V_th, i_th
+V_th = R_vth_out*Vcc*div(R_e, R_d)
+i_th = div(par(R_2, R_d), R_1)*Vcc/R_d
+R_th = V_th/i_th
 
