@@ -3,36 +3,35 @@ Different amplification stage for Reflect
 *               *----- R_f ------*
 *               |                |
 * 1 -- R_in_a --2--| -      |    |
-*                  |   xamp |----3--- out
+*                  |  xamp1 |----3--- out
 * 4 -- R_in_b --5--| +      |    
-*               |                ^
-*               |                8
-*               |                |
-*              R_c              R_1
-*               |                |
-*               6----- R_d ------7
-*               |                |
-*              R_e              R_2
-*               |                |
-*               0                0
+*               |                        ^
+*               |  *-------------*       8
+*              R_c |             |       |
+*               |  |  |      -|--*      R_1
+*               6--*--| xamp2 |          |
+*                     |      +|----------7
+*                                        |
+*                                       R_2
+*                                        |
+*                                        0
 
 Vcc 8 0 dc 3.3V
-Vsig 1 4 dc 0V sin(0V 40mV 100mHz 1s 0)
+Vsig 1 4 dc 2V sin(0V 40mV 100mHz 1s 0)
 
-R_in_a 1 2 480
-R_in_b 4 5 480
+R_in_a 1 2 10k
+R_in_b 4 5 10k
 
-R_f    2 3 33k
-R_c    5 6 20k
-R_e    6 0 10k
-R_d    6 7 20k
+R_f    2 3 330k
+R_c    5 6 330k
 
-R_1    7 8 10k
+R_1    8 7 10k
 R_2    7 0 10k
 
-R_load 3 0 1Meg
+*R_load 3 0 1Meg
 
-xamp 5 2 8 0 3 lmv358
+xamp1 5 2 8 0 3 lmv358
+xamp2 7 6 8 0 6 lmv358
 
 .include lmv358.mod
 
