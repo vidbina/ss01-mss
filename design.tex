@@ -1,1 +1,326 @@
-../design.tex
+\documentclass[]{article}
+\usepackage[T1]{fontenc}
+\usepackage{siunitx}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage{graphicx}
+% Redefine \includegraphics so that, unless explicit options are
+% given, the image width will not exceed the width of the page.
+% Images get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\usepackage{import}
+\graphicspath{{graphics/}}
+\makeatletter
+\def\ScaleIfNeeded{%
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+{%
+ \catcode`\@=11\relax%
+ \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleIfNeeded]}}%
+}%
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\setcounter{secnumdepth}{0}
+
+\author{David Asabina}
+\date{}
+
+\begin{document}
+
+\section{Position Detection}\label{position-detection}
+
+This document discusses several methods which provide the necessary
+means to measure the orientation of the blinds and therefore offer a
+solution for a feedback loop.
+
+\subsection{Electromagnetism}\label{electromagnetism}
+
+Magnetic flux density intensity $\mathbf{B}$ and magnetic flux intensity
+$\mathbf{H}$ are two measures that give an indication of magnetic forces
+at a given point in space.
+
+$\mathbf{B} = \mu\mathbf{H}$
+
+These measures are both vectors, as such both the magnitude and
+direction of the field induced by the reference magnets are available to be 
+utilized in determining the blind
+orientation.
+
+Through the placement of reference magnets, the position of the blinds or 
+variation thereof may be determined. Such an arrangement will inadvertently 
+require the placement of one or more sensors located sufficiently within the 
+vicinity of the reference magnets to be capable of observing the field 
+properties caused these magnet's field properties.
+
+\subsubsection{Magnetic Field Strength}\label{magnetic-field-strength}
+
+Hall effect sensors generally measure the magnitude of the magnetic
+field at a given point in space. As such the variation of
+electromagnetic field strenght $\delta\mathbf{H}$ may be utilized to
+determine the proximity of a magnet to the sensor.
+
+This section will further discuss the different strategies to be
+utilized in determining the blind orientation.
+
+\paragraph{Single Sensor Arrangement}\label{single-sensor-arrangement}
+
+Aligning a single hall effect sensor in the module housing and a magnet
+on the blind aligned as such to set the magnetic field
+
+\subsubsection{Magnetic Field Direction}\label{magnetic-field-direction}
+Upon measuring magnetic field direction the directional component of the 
+magnetic field vector $\delta\mathbf{\Theta}$ is analysed. Depending on the 
+positioning of the magnet and sensor with respect to each other, to demanded
+result may be produced.
+
+The HMC15XX series sensors allow the detection of the direction of the 
+fluxfield within a plane, at a given point in space. The entire approach 
+discussed within this section will be based on a design utilized the 
+aforementioned sensor.
+
+\paragraph{Axle Sensing Arrangement}
+Mounting the magnet near the axis of the blind would allow us to measure the
+orientation of the blind directly provided that the sensor is positioned near
+the axle of the blind as well (see figure \ref{fig:centersense}).
+\begin{figure}[h!]
+  \centering
+  %\def\svgwidth{250pt}
+  \input{graphics/centersense.pdf_tex}
+  \caption{Axle sensing arrangement}
+  \label{fig:centersense}
+\end{figure}
+
+The HMC15XX sensor is only capable of detection variations within  90$\deg$
+intervals. In order to allow detection over wider ranges, two similar sensing
+devices are utilzed with a 45$\deg$ phase shift between the outputs of the 
+sensor outputs.
+
+%\begin{table}[h!]
+%  %\begin{center}
+%    \caption{Phase shift between sensor outputs}
+%    \label{hmc15xxexpectedvalues}
+%    \begin{tabular}{lrrrrr}
+%      %\toprule
+%      orientation & 0 & 45 & 90 & 135 & 180 \\
+%      A & 0 & 45 & 90 & 45 & 0 \\
+%      %\midrule
+%      B & 45 & 90 & 135 & 90 & 45 \\
+%      %\bottomrule
+%    \end
+%  %\end{center}
+%\end{table}
+
+\begin{figure}[h!]
+  \centering
+  %\def\svgwidth{250pt}
+  \input{graphics/edgesense.pdf_tex}
+  \caption{Edge sensing arrangement}
+  \label{fig:edgesense}
+\end{figure}
+
+\begin{figure}[h!]
+  \def\svgwidth{350pt}
+  \input{graphics/edgestrategy.pdf_tex}
+  \caption{Edge sensing strategy}
+  \label{fig:edgestrategy}
+\end{figure}
+
+$\frac{a}{b}$
+\begin{figure}[hbt]
+	\input{circuits/hmc1512}
+	\centerline{\box\graph}
+	\caption{Basic measuring circuitry for the HMC1512 sensor}
+	\label{symlabelforquick}
+\end{figure}
+
+The LM358 operation amplifier is rated for \si{100}{dB} which translates to 
+voltage amplification of factor 100000 since $20\cdot\log_{10}{\frac{\si{100}{V}}{\si{1}{mV}}}= $ \si{100}{dB}.
+
+The HMC1512 sensor produces a signal over a range of \si{180}{mV} provided that 
+the magnetic field detected is strong enough (approximataly 80 Oerstad). During
+some tests with a Neodymium magnet the observed range varied over a range of 
+\si{60}{mV} which is considerably less than the range mentioned in the 
+datasheet. Depending on the placement of the magnet and the strength of the 
+magnet itself, the observed results could be even less than the observed range 
+of \si{60}{mV}.
+
+The ADC to be used has a resolution of 12 bits therefore offering 4096 
+quantization levels. With the beforementioned resolution and the notion that 
+the HMC1512 sensor delivers a signal within the measurable range over a 
+rotation of \ang{180}, there are $\frac{4096}{180}$ quantization levels per 
+degree in rotation which results to an accuracy of approximately 5\% per angle 
+assuming the signal into the ADC is void of noise and distortion.
+
+
+%% 60mV signal -> 55x AMP -> 3.3 V signal
+%% 30mV signal -> 110x AMP -> 3.3 V signal
+
+\subsection{Sampling}
+In figure \ref{outputa_first} the results from the first bridge are 
+portrayed as the system rotated the blinds at fixed steps for \ang{180}. 
+Several effects that impair the measurement results are:
+\begin{itemize}
+  \item obstructed blinds
+  \item insufficient mechanical transfer due to leeway
+  \item neightboring magnetic fields
+\end{itemize}
+
+Both obstruction as incomplete mechanical transfer may introduce delays in the
+motion transfer in the system. As such, the motion once transfered may 
+introduce sudden jumps leading to oscillation of the blinds in the recovery
+from the overshoot (caused by the sudden dislodging of the obstruction for
+example).
+
+The measurement algorithm will need to compensate for the named irregularities
+to be expected in operation.
+
+%%The sample sets used in this section are acquired by connecting the ADC to the
+%%output of an amplifier configured to amplify the differential signal by a 
+%%factor of 25. The voltage reference for both amplifiers is set to \si{5}{V}.
+%%
+%%With the sample set from output 1 approximately 153 quantization levels are 
+%%covered. The lowest measured means of step samples ($\mu_{min}$) is 3098 
+%%while the highest acquired sample means ($\mu_{max}$) equals 3251.
+%%\begin{figure}[ht!]
+%%  \centering
+%%  \includegraphics{graphics/plots/outa_firstset.pdf}
+%%	\caption{Amplified measurement results from 1st bridge}
+%%  \label{outputa_first}
+%%\end{figure}
+%%%% avg_min = 3098.000000, avg_max = 3251.000000, avg_range=153.000000
+%%
+%%\begin{figure}
+%%  \centering
+%%  \includegraphics{graphics/plots/outb_firstset.pdf}
+%%	\caption{Amplified measurement results from 2nd bridge}
+%%  \label{outputb_first}
+%%\end{figure}
+%%%% avg_min = 2763.250000, avg_max = 3075.750000, avg_range=312.500000
+
+According to the sensor manufacturer the voltage generated on the bridge output
+of the sensor in accordance to the equation $\Delta{V_a} = V_s S\sin(2\theta)$,
+$\Delta{V_b} = -V_s S\cos(2\theta)$ where $V_s$ represents the supply voltage, 
+$S$ represents a material constant and $\theta$ represents a reference to the 
+magnetic field angle in degrees.
+
+%% source: http://www51.honeywell.com/aero/common/documents/myaerospacecatalog-documents/Missiles-Munitions/HMC1501-1512.pdf
+The conversion of the sensor output $\Delta{V}$ into the corresponding angular 
+position in degrees $\theta$ is accomplished with the following expression:
+$$\theta = \frac{1}{2}\cdot\arcsin(\frac{\Delta{V_a}}{V_s S}) = \frac{1}{2}\cdot\arccos(\frac{\Delta{V_b}}{-V_s S})$$
+
+Assuming that $V_\phi$ represents the offset observed at the input of the 
+amplification stage (caused by common mode offsets or other anomalities)
+and $A$ represents the amplifier gain, the resulting voltage observed on the
+ADC should equal $V_{signal}\cdot A + V_\phi$ or $(V_{signal}+V_\phi)\cdot A$.
+The first expression is appropriate in case the common mode offset is 
+negligible and the output offset is known, whilst the latter expression only
+considers the influence of common mode offset. A more complete expression for 
+the expected output is $V_{\phi_{out}} + A\cdot(V_{signal}+V_{\phi_{CM}})$.
+
+$$V_A = V_s A_a S\sin(2\theta) + V_{\phi_a}$$
+$$V_B = -V_s A_b S\cos(2\theta) + V_{\phi_b}$$
+
+\subsubsection{Data Range}
+In order to properly understand the data acquired by the ADC it may be
+helpful to be aware of conditions as measured by another instrument. The 
+results depicted in table \ref{table:extremes} have been acquired with a 
+multimeter. The values were obtained by manually rotating the blinds
+and correcting the position to achieve either the lowest or highest observable
+read-out.
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Extremes as measured with a multimeter}
+    \label{table:extremes}
+    \begin{tabular}{lrr}
+      \toprule
+      & A & B \\
+      \midrule
+      A maximum & 2.54 & 1.71 \\
+      B maximum & 1.49 & 2.75 \\
+      A minimum & 0.45 & 1.75 \\
+      B minimum & 1.60 & 0.99 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{table}
+
+From table \ref{table:extremes} we witness a range of \SI{2.09}{V} in the 
+output of sensor A and a range of \SI{1.76}{V} in the output of sensor B. The
+cause of this difference is beyond the scope of this section, but in short it
+is likely to be a result of differences in sensor placement and component
+imperfections. As the differences between a sensors maximum and minimum value
+vary it is important to take the related variables into consideration in 
+interpreting the data.
+
+The dataset acquired from sensor A has produced the results depicted in figure 
+\ref{fig:a_peak}. The absolute maximum value detected was $3234$. Considering
+the fact the acquisition was executed by a 12-bit ADC powered by \SI{3.3}{V}
+we could expect the equivalent voltage to be approximately \SI{2.60}{V} ($\frac{3234}{2^{12}}\cdot 3.3$).
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{graphics/plots/a_top_values.pdf}
+	\caption{The amplified signal from sensor A with the peaks marked}
+  \label{fig:a_peak}
+\end{figure}
+
+%%The following results have been acquired with the electronic schema using
+%\begin{figure}[ht!]
+%  \centering
+%  \includegraphics{graphics/plots/closed_1_hall_hist.pdf}
+%	\caption{Results for the test setup when blinds are closed}
+%  \label{outputa_first}
+%\end{figure}
+
+%% 
+%% \subsection{Gravitation}\label{gravitation}
+%% \paragraph{MEMS Gyroscope}
+%% 
+%% \subsection{Optics}\label{optics}
+%% \paragraph{Bridge}
+%% 
+%% %% http://demonstrations.wolfram.com/MagneticFieldOfACylindricalBarMagnet/
+\end{document}
