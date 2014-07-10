@@ -297,14 +297,28 @@ vary it is important to take the related variables into consideration in
 interpreting the data.
 
 The dataset acquired from sensor A has produced the results depicted in figure 
-\ref{fig:a_peak}. The absolute maximum value detected was $3234$. Considering
+\ref{fig:a_extremes}. The absolute maximum value detected is $3234$. Considering
 the fact the acquisition was executed by a 12-bit ADC powered by \SI{3.3}{V}
 we could expect the equivalent voltage to be approximately \SI{2.60}{V} ($\frac{3234}{2^{12}}\cdot 3.3$).
+The lowest value detected by the ADC is $535$ which corresponds to \SI{0.43}{V} 
+($\frac{535}{2^{12}}\cdot 3.3$). For sensor B as depicted in figure 
+\ref{fig:b_extremes} the maximum value equals $3465$
+which corresponds to \SI{2.7}{V} ($\frac{3465}{2^{12}}\cdot 3.3$) and the 
+minimum value equals $896$ which corresponds to \SI{0.79}{V} 
+($\frac{986}{2^{12}}\cdot 3.3$).
+
 \begin{figure}[ht!]
   \centering
-  \includegraphics{graphics/plots/a_top_values.pdf}
+  \includegraphics{graphics/plots/a_extremes.pdf}
 	\caption{The amplified signal from sensor A with the peaks marked}
-  \label{fig:a_peak}
+  \label{fig:a_extremes}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{graphics/plots/b_extremes.pdf}
+	\caption{The amplified signal from sensor B with the peaks marked}
+  \label{fig:b_extremes}
 \end{figure}
 
 %%The following results have been acquired with the electronic schema using

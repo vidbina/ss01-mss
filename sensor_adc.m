@@ -5,14 +5,19 @@ function [a, b] = angleToVoltage(angle, supply=3.3)
   b = 12e-3*supply*cos(2*angle*pi/180);
 endfunction
 
-function [a, b] = angleToADC(angle, supply=3.3, gain=33, offset=3.3/2)
+function [a, b] = angleToADC(angle, supply=3.3, gain=33, offset=3.3/2, width=12)
   [a, b] = angleToVoltage(angle, supply); %*gain + offset);
-  a = a*gain+offset;
-  b = b*gain+offset;
+  a = 2^width*(a*gain+offset)/3.3;
+  b = 2^width*(b*gain+offset)/3.3;
+endfunction
+
+% level is the value as read by the ADC
+function retval = levelToAngle(level, supply=3.3, gain=33, offset=supply/2, width=12, sensor=1)
+  retval = voltageToAngle(supply*level/(2^width), supply, gain, offset, sensor);
 endfunction
 
 % signal is equal to the voltage measured by the ADC
-function retval = levelToAngle(signal, supply=3.3, gain=33, offset=3.3/2, sensor=1)
+function retval = voltageToAngle(signal, supply=3.3, gain=33, offset=3.3/2, sensor=1)
   if sensor == 1
     retval = 0.5*asin((signal-offset)/(12e-3*supply*gain))*180/pi;
   elseif sensor == 2
@@ -22,11 +27,11 @@ function retval = levelToAngle(signal, supply=3.3, gain=33, offset=3.3/2, sensor
   endif
 endfunction
 
-function retval = ratioToAngle(ratio, supply=3.3, gain=33, offset=3.3/2)
+function retval = ratioToAngle(ratio, supply=3.3, gain=33, offset=3.3/2, sensor=1)
   swing = 12e-3*supply*gain;
   baseline = offset-swing;
   printf(sprintf("\n\rrange is %f over baseline %f\n\r", swing, baseline));
-  retval = levelToAngle(baseline+((2*swing)*(ratio)), supply, gain, offset); %0.5*asin((ratio-offset))*180/pi;
+  retval = levelToAngle(baseline+((2*swing)*(ratio)), supply, gain, offset, sensor); %0.5*asin((ratio-offset))*180/pi;
 endfunction
 
 function retval = levelOverRangeToAngle(signal, top, bottom, supply=3.3, gain=33, offset=3.3/2)
@@ -71,8 +76,8 @@ title("Amplifier output");
 
 figure(3);
 [a_adc, b_adc] = arrayfun(@(x) angleToADC(x), range);
-a_returned = arrayfun(@(x) levelToAngle(x, supply, gain, supply/2, 1), a_adc);
-b_returned = arrayfun(@(x) levelToAngle(x, supply, gain, supply/2, 2), b_adc);
+a_returned = arrayfun(@(x) levelToAngle(x, supply, gain, supply/2, 12, 1), a_adc);
+b_returned = arrayfun(@(x) levelToAngle(x, supply, gain, supply/2, 12, 2), b_adc);
 plot(range, range, range, a_returned, range, b_returned);
 legend('actual angle', 'feedback from A', 'feedback from B');
 xlabel('rotation in degrees');
