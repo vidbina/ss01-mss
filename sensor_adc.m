@@ -1,12 +1,17 @@
 % A description of the conversion of the sensor output witnessed at the ADC
 % input to whichever metric is required.
-function retval = angleToVoltage(angle, supply=3.3)
-  retval = 12e-3*supply*sin(2*angle*pi/180);
+function retval = angleToVoltage(angle, supply=3.3, sensor=1)
+  if sensor == 1
+    retval = 12e-3*supply*sin(2*angle*pi/180);
+  elseif sensor == 2
+    retval = 12e-3*supply*cos(2*angle*pi/180);
+  else
+    retval = NA
+  endif
 endfunction
 
-function retval = angleToADC(angle, supply=3.3, gain=33, offset=3.3/2)
-  %angleToVoltage(angle, vss)
-  retval = (angleToVoltage(angle, supply)*gain + offset);
+function retval = angleToADC(angle, supply=3.3, gain=33, offset=3.3/2, sensor=1)
+  retval = (angleToVoltage(angle, supply, sensor)*gain + offset);
 endfunction
 
 % only this the conversion helpers within the specified ranges
@@ -41,16 +46,30 @@ function retval = valueBtoAngle(value)
   retval = valueToAngle(value, 3465, 986);
 endfunction
 
+range = 0:360;
+supply = 3.3;
+gain = 33;
+
 figure(1);
-plot(arrayfun(@(x) angleToVoltage(x), 0:360));
-title("Sensor to sensor output")
+a_out = arrayfun(@(x) angleToVoltage(x, 3.3, 1), range);
+b_out = arrayfun(@(x) angleToVoltage(x, 3.3, 2), range);
+plot(range, a_out, range, b_out);
+xlabel('rotation in degrees');
+ylabel('expected output in volts');
+legend('A', 'B');
+title("Sensor output")
 
 figure(2);
-plot(arrayfun(@(x) angleToADC(x), 0:360));
-title("Sensor to ADC");
+a_adc = arrayfun(@(x) angleToADC(x, supply, gain, supply/2, 1), range);
+b_adc = arrayfun(@(x) angleToADC(x, supply, gain, supply/2, 2), range);
+plot(range, a_adc, range, b_adc);
+xlabel('rotation in degrees');
+ylabel('expected output in volts');
+legend('A', 'B');
+title("Amplifier output");
 
-%figure(3);
-%plot(arrayfun(@(x) levelToAngle(x), arrayfun(@(x) angleToVoltage(x), 0:360)));
-%title("Angle to voltage conversion and then back to angle");
-
-%arcsin(0.56)*0.5 = -10
+%%figure(3);
+%%plot(arrayfun(@(x) levelToAngle(x), arrayfun(@(x) angleToVoltage(x), 0:360)));
+%%title("Angle to voltage conversion and then back to angle");
+%
+%%arcsin(0.56)*0.5 = -10
